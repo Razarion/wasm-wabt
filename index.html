@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+    // chrome://flags -> Experimental WebAssembly
+    fetch('binary.wasm')
+        .then(response => response.arrayBuffer())
+        .then(bytes => {
+            let mod = new WebAssembly.Module(bytes);
+            let instance = new WebAssembly.Instance(mod, {});
+            console.info(instance);
+            console.info(instance.exports.addTwo(1, 2));
+            try {
+                console.info(instance.exports.throwException());
+            } catch(error) {
+                console.info("Catch Exception from WebAssembly");
+                console.info(error);
+            }
+        })
+        .catch(function (error) {
+            console.error("WebAssembly.Instance() failed: " + error);
+            console.error(error);
+        });
+</script>
+
+
+</body>
+</html>
